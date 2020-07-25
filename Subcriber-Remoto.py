@@ -52,7 +52,7 @@ async def run(loop):
         # Datos para Guardar Mensaje en Formato JSon
         #/////////////////////////////////////////////////////////
         # Ruta del Archivo donde se guardaran los archivos Json
-        dir = 'C:/File-Nats'  
+        dir = 'C:/File-Nats/Nats-Mensajes'  
 
         # Date
         now = datetime.now()
