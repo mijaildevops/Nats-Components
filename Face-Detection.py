@@ -43,6 +43,23 @@ async def FrameProces (Secuencia, Data):
     # mensaje es formatted JSON
     mensaje = json.loads(JsonNats)
 
+    #////////////////////////////////////////////////////////
+    # Save Data recibida en formato json (Sensor-Process)
+    #////////////////////////////////////////////////////////
+    # Fecha para Nombre del archivo Convertir a funcion
+    now = datetime.now()
+    timestampStr = now.strftime("%Y-%m-%d %H%M%S")
+
+    # Estructura para el Nombre del Archivo
+    file_name = str(Secuencia) + " - [Sensor-Processor] - " + str(timestampStr)  + ".json"
+
+    # Ruta del Archivo donde se guardaran los archivos Json
+    dir = 'C:/File-Nats/VSBLTY-DATA-TEMP' 
+
+    # Crear Archivo .json con los datos del mensaje Recibido
+    with open(os.path.join(dir, file_name), 'w') as file:
+        json.dump(mensaje, file)
+
     Hostname = mensaje["Hostname"]
     Data = mensaje["Data"]
     Temp = mensaje["Temp"]
@@ -87,12 +104,8 @@ async def FrameProces (Secuencia, Data):
 
     dir = 'C:/File-Nats/VSBLTY-DATA-FACE'  
 
-    # Date
-    now = datetime.now()
-    timestampStr = now.strftime("%d-%b-%Y %H%M%S")
-
     # Estructura para el Nombre del Archivo
-    file_name =" - " + str(timestampStr) + " - Sensor-Processor - .json"
+    file_name = str(Secuencia) + " - [Face-Detection] - " + str(timestampStr)  + ".json"
 
     # Decode UTF-8 bytes mensaje Recibido 
     # to double quotes to make it valid JSON
