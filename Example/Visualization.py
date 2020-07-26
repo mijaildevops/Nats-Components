@@ -22,17 +22,6 @@ import requests
 #Opencv
 import cv2
 
-#  Flask
-from flask import Flask, request
-from flask import render_template
-from flask import jsonify
-# Cors
-from flask_cors import CORS
-
-# Cors access
-app=Flask(__name__,template_folder='templates')
-cors = CORS(app)
-
 #///////////////////////////////////////////
 # Get Hostname
 #///////////////////////////////////////////
@@ -73,6 +62,13 @@ async def run(loop):
         parsed_json = (json.loads(JsonNats))
         #print(parsed_json)
 
+
+
+
+
+        # Serelizando Data
+
+
         #////////////////////////////////////////////////////////////////
         # Save json  Subcriber
         #////////////////////////////////////////////////////////////////
@@ -88,15 +84,6 @@ async def run(loop):
         with open(os.path.join(dir, file_name), 'w') as file:
             json.dump(parsed_json, file)
 
-        #//////////////////////////////////////////////////////////////////////////
-        # Index
-        #//////////////////////////////////////////////////////////////////////////
-        @app.route('/')
-        async def home():
-            return 'Api Rest External (App V3)'
-
-
-
     # Subscribe to get all messages from the beginning.
     await sc.subscribe("VSBLTY-DATA-VISUALIZATION", start_at='first', cb=cb)
 
@@ -104,4 +91,3 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.run_until_complete(run(loop))
     loop.run_forever()
-    app.run(host='192.168.100.51', port=6080, debug=True)
