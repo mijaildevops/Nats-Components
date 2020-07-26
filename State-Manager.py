@@ -128,7 +128,7 @@ async def run(loop):
 
         data['Confidence'] = str(confidence)
         data['DistancePerson'] = str(DistancePerson)
-        data['AgeGenderDetector'] = str(AgeGenderDetector)
+        #data['AgeGenderDetector'] = str(AgeGenderDetector)
         data['Left_eye'] = str(left_eye)
         data['Right_eye'] = str(right_eye)
 
@@ -164,6 +164,13 @@ async def run(loop):
         # Crear Archivo .json con los datos del mensaje Recibido
         with open(os.path.join(dir, file_name), 'w') as file:
             json.dump(data, file)
+
+         # Publicar Mensaje con el resultado en el canal VSBLTY-DATA-FACE
+        ChannelNatsPublisher = 'VSBLTY-DATA-VISUALIZATION'
+        # Definir Channel y Mensaje
+        await sc.publish(ChannelNatsPublisher, bytes(str(data), 'utf8'))
+        # Sleep 
+
 
     # Subscribe to get all messages from the beginning.
     await sc.subscribe("VSBLTY-DATA-FACE", start_at='first', cb=cb)
