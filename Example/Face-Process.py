@@ -68,6 +68,9 @@ async def run(loop):
         # mensaje es formatted JSON
         mensaje = json.loads(JsonNats)
 
+        Frame = str(mensaje["Frame"])
+        timestampFrame = str(mensaje["timestampFrame"])
+
         # Crear Archivo .json con los datos del mensaje Recibido
         with open(os.path.join(dir, file_name), 'w') as file:
             json.dump(mensaje, file)

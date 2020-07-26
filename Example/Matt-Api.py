@@ -2,11 +2,9 @@ import cv2
 
 import requests
 
- 
-
 #JUST to get the image into memory. Your code will probably already have a file in memory from the Dermalog API. You don't need to write to disk. 
 
-im = cv2.imread('pruitt.png')
+im = cv2.imread('test.jpg')
 
  
 
