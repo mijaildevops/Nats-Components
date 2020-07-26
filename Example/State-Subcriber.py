@@ -54,35 +54,34 @@ async def run(loop):
 
         # Secuencia Mensaje
         print(str(msg.seq))
-        print(str(msg.data)[:10])
+        print('Bites: ',str(msg.data)[:200])
 
         # Decode UTF-8 bytes mensaje Recibido 
         # to double quotes to make it valid JSON
         JsonNats = msg.data.decode('utf8').replace("'", '"')
-        print (JsonNats[:10])
+        print('')
+        print ('String: ', JsonNats[:50])
+        print (type(JsonNats))
 
+        # para corregir erro serrelizando Json Remplazo cadena 
+        JsonNatsRemplace =  JsonNats.replace('license": True, "manager": True, "', 'license": "True", "manager": "True", "')
         
+        # Serelizando Data
+        parsed_json = (json.loads(JsonNatsRemplace))
+        print(json.dumps(parsed_json, indent=4, sort_keys=True))
 
-
+        # Save json 
         dir = 'C:/File-Nats/State-Manager'  
-
         # Date
         now = datetime.now()
         timestampStr = now.strftime("%d-%m-%Y %H%M%S")
-
-        # Build Json Mensaje 
-        ChannelNats = 'VSBLTY-DATA-TEMP'
-        data = {}
-        data['Hostname'] = "Hostname"
-        data['Channel'] = ChannelNats
-        data['Type'] = 'Publisher'
 
         # Estructura para el Nombre del Archivo
         file_name = str(msg.seq) + " - [State-Manager] - " + str(timestampStr)  + ".json"
 
         # Crear Archivo .json con los datos del mensaje Recibido
         with open(os.path.join(dir, file_name), 'w') as file:
-            json.dump(JsonNats, file)
+            json.dump(parsed_json, file)
 
     # Subscribe to get all messages from the beginning.
     await sc.subscribe("VSBLTY-DATA-FACE", start_at='first', cb=cb)

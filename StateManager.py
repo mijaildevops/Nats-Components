@@ -26,116 +26,13 @@ import cv2
 # Get Hostname
 #///////////////////////////////////////////
 Hostname = socket.gethostname()
-print('Runing... State-Manager as Nats Subscriber ')
-
-#task y 
-
-async def FrameProces (Secuencia, Data):
-
-    print ('- Task1 - Get Data Face-detection')
-    # Secuencia Mensaje
-    print ("    - Message Received: ", str(Secuencia))
-
-    # Decode UTF-8 bytes mensaje Recibido 
-    # to double quotes to make it valid JSON
-    JsonNats = Data.decode('utf8').replace("'", '"')
-
-    # mensaje es formatted JSON
-    mensaje = json.loads(JsonNats)
-    print (mensaje['FrameTimestampId'])
-
-    #////////////////////////////////////////////////////////
-    # Save Data recibida en formato json (Sensor-Process)
-    #////////////////////////////////////////////////////////
-    # Fecha para Nombre del archivo Convertir a funcion
-    now = datetime.now()
-    timestampStr = now.strftime("%Y-%m-%d %H%M%S")
-
-    # Estructura para el Nombre del Archivo
-    file_name = str(Secuencia) + " - [State-Manager] - " + str(timestampStr)  + ".json"
-
-    # Ruta del Archivo donde se guardaran los archivos Json
-    dir = 'C:/File-Nats/State-Manager' 
-
-    # Crear Archivo .json con los datos del mensaje Recibido
-    with open(os.path.join(dir, file_name), 'w') as file:
-        json.dump(mensaje, file)
-
-    """ Hostname = mensaje["Hostname"]
-    Data = mensaje["Data"]
-    Temp = mensaje["Temp"]
-    FrameTimestamp = mensaje["FrameTimestamp"]
-
-    print ("       - ", Hostname)
-    print ("       - ", FrameTimestamp)
-    print ("       - ", Temp)
-    print ("       - ", Data[:10])
-
-    #/////////////////////////////////////////////////////////////////////
-    # Base 64
-    #/////////////////////////////////////////////////////////////////////
-    Imagen64Bytes = bytes(str(Data), 'utf8')
-    print (" - ", Imagen64Bytes[:10])
-    print (type(Imagen64Bytes))
-    # From 64 to Bites
-    ImagenBites = base64.decodestring(Imagen64Bytes) 
-    print ("bites : ",ImagenBites[:6])
-    print (type(ImagenBites))
-
-    #/////////////////////////////////////////////////////////////////////
-    # Send request
-    #/////////////////////////////////////////////////////////////////////
-    files = {'file': ImagenBites}  
-    #POST to API
-    url = "http://openvino-api.vsblty.support:8099/process?raw"
-    r=requests.post(url,files=files)
-
-    #Print the results
-
-    respuesta = str(r.content.decode())
-
-    data = {}
-
-    data['FrameTimestampId'] = str(FrameTimestamp)
-    data['SecuenciaMsg'] = str(Secuencia)
-    data['HostnamePublisher'] = str(Hostname)
-    data['Data'] = str(Data)
-    data['Temp'] = str(Temp)
-
-
-    dir = 'C:/File-Nats/VSBLTY-DATA-FACE'  
-
-    # Estructura para el Nombre del Archivo
-    file_name = str(Secuencia) + " - [Face-Detection] - " + str(timestampStr)  + ".json"
-
-    # Decode UTF-8 bytes mensaje Recibido 
-    # to double quotes to make it valid JSON
-    #JsonNats = respuesta.data.decode('utf8').replace("'", '"')
-
-    # mensaje es formatted JSON
-    mensaje = json.loads(respuesta)
-
-    data['FaceDetection'] = mensaje
-
-
-
-    # Crear Archivo .json con los datos del mensaje Recibido
-    with open(os.path.join(dir, file_name), 'w') as file:
-        json.dump(data, file)
-
-    return data """
-
-
-
+print('Runing... State-Manager - Nats Subscriber')
 
 
 async def error_cb(e):
     print("Error:", e)
 
 async def run(loop):
-
-    #
-
     nc = NATS()
     sc = STAN()
 
@@ -149,21 +46,42 @@ async def run(loop):
 
     # Start session with NATS Streaming cluster using
     # the established NATS connection.
-    await sc.connect("vsblty-cluster", "client-123548754112854", nats=nc)
-    
+    await sc.connect("vsblty-cluster", "client-123548dsdf7854", nats=nc)
 
     async def cb(msg):
+        # Mostrar por consola mensaje y Data
+        #print("Received a message (seq={}): {}".format(msg.seq, msg.data))
 
-        task1 = await loop.create_task(FrameProces(msg.seq, msg.data))
+        # Secuencia Mensaje
+        print(str(msg.seq))
+        print('Bites: ',str(msg.data)[:200])
 
-        # Publicar Mensaje con el resultado en el canal VSBLTY-DATA-FACE
-        """ ChannelNats = 'VSBLTY-DATA-FACE'
-        # Definir Channel y Mensaje
-        await sc.publish(ChannelNats, bytes(str(task1), 'utf8'))
-        # Sleep  """
+        # Decode UTF-8 bytes mensaje Recibido 
+        # to double quotes to make it valid JSON
+        JsonNats = msg.data.decode('utf8').replace("'", '"')
+        print('')
+        print ('String: ', JsonNats[:50])
+        print (type(JsonNats))
 
-
+        # para corregir erro serrelizando Json Remplazo cadena 
+        JsonNatsRemplace =  JsonNats.replace('license": True, "manager": True, "', 'license": "True", "manager": "True", "')
         
+        # Serelizando Data
+        parsed_json = (json.loads(JsonNatsRemplace))
+        print(json.dumps(parsed_json, indent=4, sort_keys=True))
+
+        # Save json 
+        dir = 'C:/File-Nats/State-Manager'  
+        # Date
+        now = datetime.now()
+        timestampStr = now.strftime("%d-%m-%Y %H%M%S")
+
+        # Estructura para el Nombre del Archivo
+        file_name = str(msg.seq) + " - [State-Manager] - " + str(timestampStr)  + ".json"
+
+        # Crear Archivo .json con los datos del mensaje Recibido
+        with open(os.path.join(dir, file_name), 'w') as file:
+            json.dump(parsed_json, file)
 
     # Subscribe to get all messages from the beginning.
     await sc.subscribe("VSBLTY-DATA-FACE", start_at='first', cb=cb)

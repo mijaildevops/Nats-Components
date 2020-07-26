@@ -74,14 +74,14 @@ async def FrameProces (Secuencia, Data):
     # Base 64
     #/////////////////////////////////////////////////////////////////////
     Imagen64Bytes = bytes(str(Data), 'utf8')
-    print (" - ", Imagen64Bytes[:10])
-    print (type(Imagen64Bytes))
+    #print (" - ", Imagen64Bytes[:10])
+    #print (type(Imagen64Bytes))
     # From 64 to Bites
     ImagenBites = base64.decodestring(Imagen64Bytes) 
-    print ("bites : ",ImagenBites[:6])
-    print (type(ImagenBites))
+    #print ("bites : ",ImagenBites[:6])
+    #print (type(ImagenBites))
 
-    #/////////////////////////////////////////////////////////////////////
+    #//////////////////////////////////////////////////////////////////////
     # Send request
     #/////////////////////////////////////////////////////////////////////
     files = {'file': ImagenBites}  
@@ -154,6 +154,10 @@ async def run(loop):
     async def cb(msg):
 
         task1 = await loop.create_task(FrameProces(msg.seq, msg.data))
+        print('task')
+        print (type(task1))
+
+
 
         # Publicar Mensaje con el resultado en el canal VSBLTY-DATA-FACE
         ChannelNats = 'VSBLTY-DATA-FACE'
