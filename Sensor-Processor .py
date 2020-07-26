@@ -102,7 +102,7 @@ async def run(loop):
     await sc.connect("vsblty-cluster", Hostname, nats=nc)
 
     # Periodically send a message Cada Segundo
-    while True:
+    while True: 
 
         #Get Frame 
         Frame = GetFrameCamera()

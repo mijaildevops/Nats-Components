@@ -50,6 +50,35 @@ async def ApiRequest():
     #Print the results
     #print(str(r.content.decode()))
     FrameAnalisis = str(r.content.decode())
+    respuesta = str(r.content.decode())
+
+    data = {}
+    data['Hostname'] = "Hostname-254"
+
+    dir = 'C:/File-Nats/VSBLTY-DATA-FACE'
+    # Date
+    now = datetime.now()
+    timestampStr = now.strftime("%d-%b-%Y %H%M%S")
+
+    # Estructura para el Nombre del Archivo
+    file_name =" - " + str(timestampStr) + " - Face Detection - .json"
+
+    # Decode UTF-8 bytes mensaje Recibido 
+    # to double quotes to make it valid JSON
+    #JsonNats = respuesta.data.decode('utf8').replace("'", '"')
+
+    # mensaje es formatted JSON
+    mensaje = json.loads(respuesta)
+
+    data['respuesta'] = mensaje
+
+
+
+    # Crear Archivo .json con los datos del mensaje Recibido
+    with open(os.path.join(dir, file_name), 'w') as file:
+        json.dump(data, file)  
+
+
     #print (FrameAnalisis)
     return FrameAnalisis
 
