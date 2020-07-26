@@ -49,11 +49,7 @@ async def ApiRequest():
 
     #Print the results
     #print(str(r.content.decode()))
-    FrameAnalisis = str(r.content.decode())
-    respuesta = str(r.content.decode())
-
-    data = {}
-    data['Hostname'] = "Hostname-254"
+    FrameAnalysis = str(r.content.decode())
 
     dir = 'C:/File-Nats/VSBLTY-DATA-FACE'
     # Date
@@ -68,9 +64,11 @@ async def ApiRequest():
     #JsonNats = respuesta.data.decode('utf8').replace("'", '"')
 
     # mensaje es formatted JSON
-    mensaje = json.loads(respuesta)
+    FaceProcessing = json.loads(FrameAnalysis)
 
-    data['respuesta'] = mensaje
+    data = {}
+    data['TimeRequest'] = str(timestampStr)
+    data['Face-Processing'] = FaceProcessing
 
 
 
@@ -78,9 +76,7 @@ async def ApiRequest():
     with open(os.path.join(dir, file_name), 'w') as file:
         json.dump(data, file)  
 
-
-    #print (FrameAnalisis)
-    return FrameAnalisis
+    return FaceProcessing
 
 async def JsonFrameProcess(seq):
     print ('Json Save')
