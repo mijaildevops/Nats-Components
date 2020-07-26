@@ -26,13 +26,13 @@ import cv2
 # Get Hostname
 #///////////////////////////////////////////
 Hostname = socket.gethostname()
-print('Runing... Nats Subscriber')
+print('Runing... State-Manager as Nats Subscriber ')
 
 #task y 
 
 async def FrameProces (Secuencia, Data):
 
-    print ('- Task1 - Get Data Sensor Processor')
+    print ('- Task1 - Get Data Face-detection')
     # Secuencia Mensaje
     print ("    - Message Received: ", str(Secuencia))
 
@@ -42,6 +42,7 @@ async def FrameProces (Secuencia, Data):
 
     # mensaje es formatted JSON
     mensaje = json.loads(JsonNats)
+    print (mensaje['FrameTimestampId'])
 
     #////////////////////////////////////////////////////////
     # Save Data recibida en formato json (Sensor-Process)
@@ -51,16 +52,16 @@ async def FrameProces (Secuencia, Data):
     timestampStr = now.strftime("%Y-%m-%d %H%M%S")
 
     # Estructura para el Nombre del Archivo
-    file_name = str(Secuencia) + " - [Sensor-Processor] - " + str(timestampStr)  + ".json"
+    file_name = str(Secuencia) + " - [State-Manager] - " + str(timestampStr)  + ".json"
 
     # Ruta del Archivo donde se guardaran los archivos Json
-    dir = 'C:/File-Nats/Sensor-Processor' 
+    dir = 'C:/File-Nats/State-Manager' 
 
     # Crear Archivo .json con los datos del mensaje Recibido
     with open(os.path.join(dir, file_name), 'w') as file:
         json.dump(mensaje, file)
 
-    Hostname = mensaje["Hostname"]
+    """ Hostname = mensaje["Hostname"]
     Data = mensaje["Data"]
     Temp = mensaje["Temp"]
     FrameTimestamp = mensaje["FrameTimestamp"]
@@ -102,7 +103,7 @@ async def FrameProces (Secuencia, Data):
     data['Temp'] = str(Temp)
 
 
-    dir = 'C:/File-Nats/Face-Detection'  
+    dir = 'C:/File-Nats/VSBLTY-DATA-FACE'  
 
     # Estructura para el Nombre del Archivo
     file_name = str(Secuencia) + " - [Face-Detection] - " + str(timestampStr)  + ".json"
@@ -122,7 +123,7 @@ async def FrameProces (Secuencia, Data):
     with open(os.path.join(dir, file_name), 'w') as file:
         json.dump(data, file)
 
-    return data
+    return data """
 
 
 
@@ -148,7 +149,7 @@ async def run(loop):
 
     # Start session with NATS Streaming cluster using
     # the established NATS connection.
-    await sc.connect("vsblty-cluster", "client-1235487854", nats=nc)
+    await sc.connect("vsblty-cluster", "client-123548754112854", nats=nc)
     
 
     async def cb(msg):
@@ -156,16 +157,16 @@ async def run(loop):
         task1 = await loop.create_task(FrameProces(msg.seq, msg.data))
 
         # Publicar Mensaje con el resultado en el canal VSBLTY-DATA-FACE
-        ChannelNats = 'VSBLTY-DATA-FACE'
+        """ ChannelNats = 'VSBLTY-DATA-FACE'
         # Definir Channel y Mensaje
         await sc.publish(ChannelNats, bytes(str(task1), 'utf8'))
-        # Sleep 
+        # Sleep  """
 
 
         
 
     # Subscribe to get all messages from the beginning.
-    await sc.subscribe("VSBLTY-DATA-TEMP", start_at='first', cb=cb)
+    await sc.subscribe("VSBLTY-DATA-FACE", start_at='first', cb=cb)
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
