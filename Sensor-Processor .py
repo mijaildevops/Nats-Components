@@ -27,7 +27,7 @@ TempRandom = [95, 95.90, 96.44, 96.80, 97.34, 97.88, 98.42, 98.78, 99.14, 99.86,
 # Hostname
 #///////////////////////////////////////////
 Hostname = socket.gethostname()
-print('Runing... Nats Publisher')
+print('Runing... Nats Publisher') 
 
 def GetFrameCamera ():
     

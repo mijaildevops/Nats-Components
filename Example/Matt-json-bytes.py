@@ -16,13 +16,14 @@ import base64
 image = open('test.jpg', 'rb')
 image_read = image.read()
 image_64_encode = base64.encodestring(image_read)
-print (image_64_encode[:6])
+print ("64-b: ", image_64_encode[:6])
 image_64_decode = base64.decodestring(image_64_encode) 
-print (image_64_decode[:6])
+print ("bites : ",image_64_decode[:6])
 print (type(image_64_decode))
 """ image_result = open('deer_decode.gif', 'wb') # create a writable image and write the decoding result
 image_result.write(image_64_decode) """
 
+input()
  
 
 #Place the file in the files array for the post method
