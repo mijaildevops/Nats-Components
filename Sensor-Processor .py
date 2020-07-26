@@ -32,8 +32,8 @@ print('Runing... Nats Publisher')
 def GetFrameCamera ():
     
     # Inicializar Camara 
-    #cap = cv2.VideoCapture(0) #USB
-    cap = cv2.VideoCapture('http://100.97.218.207/camara/low/Correa%20Cloud.jpg') #IP
+    cap = cv2.VideoCapture(0) #USB
+    #cap = cv2.VideoCapture('http://100.97.218.207/camara/low/Correa%20Cloud.jpg') #IP
     # modelo de deteccion
     faceClassif = cv2.CascadeClassifier(cv2.data.haarcascades+'haarcascade_frontalface_default.xml')
     

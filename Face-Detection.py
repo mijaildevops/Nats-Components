@@ -51,10 +51,10 @@ async def FrameProces (Secuencia, Data):
     timestampStr = now.strftime("%Y-%m-%d %H%M%S")
 
     # Estructura para el Nombre del Archivo
-    file_name = str(Secuencia) + " - [Sensor-Processor] - " + str(timestampStr)  + ".json"
+    file_name = str(Secuencia) + " - [Face-Detection] - [Subscriber] - " + str(timestampStr)  + ".json"
 
     # Ruta del Archivo donde se guardaran los archivos Json
-    dir = 'C:/File-Nats/Sensor-Processor' 
+    dir = 'C:/File-Nats/Face-Detection/Subscriber' 
 
     # Crear Archivo .json con los datos del mensaje Recibido
     with open(os.path.join(dir, file_name), 'w') as file:
@@ -102,10 +102,10 @@ async def FrameProces (Secuencia, Data):
     data['Temp'] = str(Temp)
 
 
-    dir = 'C:/File-Nats/Face-Detection'  
+    dir = 'C:/File-Nats/Face-Detection/Publisher'  
 
     # Estructura para el Nombre del Archivo
-    file_name = str(Secuencia) + " - [Face-Detection] - " + str(timestampStr)  + ".json"
+    file_name = str(Secuencia) + " - [Face-Detection] - [Publisher] - " + str(timestampStr)  + ".json"
 
     # Decode UTF-8 bytes mensaje Recibido 
     # to double quotes to make it valid JSON
