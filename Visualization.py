@@ -22,16 +22,8 @@ import requests
 #Opencv
 import cv2
 
-#  Flask
-from flask import Flask, request
-from flask import render_template
-from flask import jsonify
-# Cors
-from flask_cors import CORS
+#os.system('python Web-App.py')
 
-# Cors access
-app=Flask(__name__,template_folder='templates')
-cors = CORS(app)
 
 #///////////////////////////////////////////
 # Get Hostname
@@ -40,10 +32,12 @@ Hostname = socket.gethostname()
 print('Runing... Visualization - Nats Subscriber')
 
 
+
 async def error_cb(e):
     print("Error:", e)
 
 async def run(loop):
+    
     nc = NATS()
     sc = STAN()
 
@@ -88,12 +82,12 @@ async def run(loop):
         with open(os.path.join(dir, file_name), 'w') as file:
             json.dump(parsed_json, file)
 
-        #//////////////////////////////////////////////////////////////////////////
-        # Index
-        #//////////////////////////////////////////////////////////////////////////
-        @app.route('/')
-        async def home():
-            return 'Api Rest External (App V3)'
+        dir = 'C:/File-Nats/Visualization/Data'
+        # guardar datos archiv data.json (Api web site)
+        with open(os.path.join(dir, "Data.json"), 'w') as file:
+            json.dump(parsed_json, file)
+
+        
 
 
 
@@ -104,4 +98,5 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.run_until_complete(run(loop))
     loop.run_forever()
-    app.run(host='192.168.100.51', port=6080, debug=True)
+    
+    

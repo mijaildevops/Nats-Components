@@ -1,0 +1,76 @@
+<!-- <html>
+  <head>
+    <title>{{ titulo }} - Mi web de prototipado</title>
+  </head>
+  <body>
+      <h1>Hola, {{ usuario.nombre }}!</h1>
+  </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ titulo }} - Kiosk.com</title>
+<style>
+
+body{
+    background-color: grey;
+}
+
+.entice{
+    background-color: darkkhaki;
+}
+
+.engage{
+    background-color: rgb(11, 72, 129);
+}
+.Pass{
+    background-color: green;
+}
+
+.Pass{
+    background-color: red;
+}
+.Titulo-Top {
+  display: flex;
+  justify-content: center;
+}
+
+
+</style>
+</head>
+<body>
+    
+    <div class="Titulo-Top">
+        <h1>VSBLTY {{ usuario.App }}!</h1>
+    </div>
+    <div class="Titulo-Top">
+        <h1>State: {{ State }}</h1>
+    </div>
+    <div class="Titulo-Top">
+      
+    </div>
+    <div class="Titulo-Top">
+        <h1>Mensaje:</h1>
+        <h3>Mensaje: {{ Mensaje }}!</h>
+    </div>
+
+
+</body>
+</html>
+<script>
+
+// ********************************************************************
+// Delete All Records
+// ********************************************************************
+// Esta Funcion Elimina Todo el Historial de registros asociados al User
+function DeleteAllData (){
+    fetch('http://192.168.100.102:6080/Data')
+    .then(ListTest=>ListTest.json())
+    .then(ListTest=>{
+      console.log(ListTest)
+    }
+)}
+
+</script>
