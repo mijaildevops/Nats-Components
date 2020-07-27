@@ -19,7 +19,13 @@ import base64
 from base64 import b64encode
 #Request
 import requests
+# GUID
+import uuid 
 
+#///////////////////////////////////////////
+# Generamos Un GUID 
+#///////////////////////////////////////////
+IdUnico = uuid.uuid4()
 
 #///////////////////////////////////////////
 # Get Hostname
@@ -27,9 +33,8 @@ import requests
 Hostname = socket.gethostname()
 print('[Face Detection] is Running... Nats Server - Host: ', Hostname)
 
-
 #///////////////////////////////////////////
-# #crear carpeta
+# crear carpeta
 #///////////////////////////////////////////
 try:
     FolderFaceDetection = "C:/File-Nats/Face-Detection"
@@ -41,6 +46,29 @@ try:
 except FileExistsError:
     print ("      - Backup Folders Exist")
 
+#///////////////////////////////////////////
+# Validar o Crear File Setting
+#///////////////////////////////////////////
+dirFolders = 'C:/File-Nats/Face-Detection/Settings.json'
+
+if os.path.isfile(dirFolders):
+    print('The file already exists.')
+else:
+    Setting = {
+        'ServerIP' : 'nats://127.0.0.1:4222',
+        'ClientId'   : str(IdUnico)
+    }
+    print('Configuration file does not exist.')
+    with open(dirFolders, 'w') as file:
+        json.dump(Setting, file)
+
+#///////////////////////////////////////////
+# Get Setting from Settings.json
+#///////////////////////////////////////////
+with open(dirFolders, 'r') as file:
+    data = json.load(file)
+    ServerIP = data["ServerIP"]
+    ClientId = data["ClientId"]
 
 # funcion recibe el mensaje del Sensor Procesor 
 async def FrameProces (Secuencia, Data):
@@ -143,13 +171,13 @@ async def error_cb(e):
 #/////////////////////////////////////////////////////////////////
 # Conexion a Nats Server
 #/////////////////////////////////////////////////////////////////
-async def run(loop):
+async def run(loop, ClientId, ServerIP):
 
     nc = NATS()
     sc = STAN()
 
     options = {
-        "servers": ["nats://192.168.100.228:4222"],
+        "servers": [ServerIP],
         "io_loop": loop,
         "error_cb": error_cb
     }
@@ -158,7 +186,7 @@ async def run(loop):
 
     # Start session with NATS Streaming cluster using
     # the established NATS connection.
-    await sc.connect("vsblty-cluster", "client-11b77c0e-6187-4855-acda-3b41e9333e34", nats=nc)
+    await sc.connect("vsblty-cluster", ClientId, nats=nc)
     
     async def cb(msg):
 
@@ -179,5 +207,5 @@ async def run(loop):
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(run(loop))
+    loop.run_until_complete(run(loop, ClientId, ServerIP))
     loop.run_forever()
